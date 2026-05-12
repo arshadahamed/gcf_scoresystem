@@ -17,8 +17,9 @@
     "validate:arch": "depcruise packages/domain/src packages/application/src packages/contracts/src --config .dependency-cruiser.cjs"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
+    "dependency-cruiser": "^17.4.0",
     "turbo": "^2.3.0",
-    "typescript": "^5.5.0",
-    "@types/node": "^20.0.0"
+    "typescript": "^5.5.0"
   }
 }
