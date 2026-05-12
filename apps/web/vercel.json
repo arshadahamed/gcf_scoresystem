@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && pnpm build --filter @scf/contracts && cd apps/web && pnpm build",
+  "outputDirectory": ".next"
+}
