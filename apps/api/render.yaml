@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: scf-api
+    env: node
+    plan: free
+    buildCommand: cd ../.. && pnpm install --frozen-lockfile && pnpm build --filter @scf/domain --filter @scf/contracts --filter @scf/application && cd apps/api && pnpm build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PORT
+        value: "3001"
