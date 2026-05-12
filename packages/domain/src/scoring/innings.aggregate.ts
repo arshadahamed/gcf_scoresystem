@@ -69,7 +69,7 @@ export class Innings extends AggregateRoot<string> {
   recordBall(cmd: RecordBallCommand): Result<BallRecordedEvent, InningsClosedError | ConcurrencyError | InvalidBallError> {
     if (this._isComplete) return err(new InningsClosedError());
     if (cmd.expectedSeq !== this._balls.length) {
-      return err(new ConcurrencyError(this._balls.length, cmd.expectedSeq));
+      return err(new ConcurrencyError(cmd.expectedSeq, this._balls.length));
     }
 
     const extras = {
