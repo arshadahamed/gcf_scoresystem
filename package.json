@@ -1,0 +1,24 @@
+{
+  "name": "school-cricket-fiesta",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:ci": "turbo run test --concurrency=4",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "validate:arch": "depcruise packages/domain/src packages/application/src packages/contracts/src --config .dependency-cruiser.cjs"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
+  }
+}
