@@ -1,0 +1,5 @@
+import { SponsorStrip } from '@/features/overlay/components/overlays/SponsorStrip';
+export default async function SponsorPage({ params }: { params: Promise<{ matchId: string }> }) {
+  const { matchId } = await params;
+  return <div className="relative w-[1920px] h-[1080px]"><SponsorStrip /></div>;
+}
