@@ -60,11 +60,12 @@ export class SupabaseMatchRepository implements IMatchRepository {
       .maybeSingle();
     const latestSeq = seqData ? seqData.seq + 1 : 0;
     const innings = Innings.start({
-      id:            data.id,
-      matchId:       data.match_id,
-      number:        data.number,
-      battingTeamId: data.batting_team_id,
-      maxOvers:      0,
+      id:             data.id,
+      matchId:        data.match_id,
+      number:         data.number,
+      battingTeamId:  data.batting_team_id,
+      bowlingTeamId:  data.bowling_team_id ?? '',
+      maxOvers:       0,
     });
     Object.assign(innings, {
       _wickets:    data.total_wickets,
@@ -95,7 +96,7 @@ export class SupabaseMatchRepository implements IMatchRepository {
       .order('number', { ascending: true });
     if (error) throw new Error(error.message);
     return (data ?? []).map((r: any) => {
-      const inn = Innings.start({ id: r.id, matchId: r.match_id, number: r.number, battingTeamId: r.batting_team_id, maxOvers: 0 });
+      const inn = Innings.start({ id: r.id, matchId: r.match_id, number: r.number, battingTeamId: r.batting_team_id, bowlingTeamId: r.bowling_team_id ?? '', maxOvers: 0 });
       Object.assign(inn, { _wickets: r.total_wickets, _isComplete: r.is_complete });
       inn.pullDomainEvents();
       return inn;

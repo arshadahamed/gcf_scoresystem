@@ -16,11 +16,12 @@ interface InningsRow {
 export class InningsMapper {
   static toDomain(row: InningsRow): Innings {
     const innings = Innings.start({
-      id:            row.id,
-      matchId:       row.match_id,
-      number:        row.number,
-      battingTeamId: row.batting_team_id,
-      maxOvers:      0,
+      id:             row.id,
+      matchId:        row.match_id,
+      number:         row.number,
+      battingTeamId:  row.batting_team_id,
+      bowlingTeamId:  row.bowling_team_id,
+      maxOvers:       0,
     });
     Object.assign(innings, {
       _wickets:    row.total_wickets,

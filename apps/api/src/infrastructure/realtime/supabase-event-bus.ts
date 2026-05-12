@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { IEventBus } from '@scf/application';
 import type { IDomainEvent } from '@scf/domain';
 import { Channels } from '@scf/contracts';
-import pino from 'pino';
+import { pino } from 'pino';
 
 const logger = pino({ name: 'EventBus' });
 
@@ -18,12 +18,12 @@ export class SupabaseEventBus implements IEventBus {
       const channel = this.resolveChannel(event);
       if (!channel) { logger.warn({ event: event.name }, 'No channel for event'); continue; }
       const ch = this.client.channel(channel);
-      const { error } = await ch.send({
+      const response = await ch.send({
         type: 'broadcast',
         event: event.name,
         payload: this.serialize(event),
       });
-      if (error) logger.error({ error, event: event.name }, 'Failed to broadcast event');
+      if (response !== 'ok') logger.error({ response, event: event.name }, 'Failed to broadcast event');
     }
   }
 
