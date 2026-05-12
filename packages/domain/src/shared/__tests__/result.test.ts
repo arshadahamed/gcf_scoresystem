@@ -26,4 +26,15 @@ describe('Result', () => {
     const mapped = r.map((n) => n + 1);
     expect(mapped.isErr()).toBe(true);
   });
+
+  it('ok flatMap chains results', () => {
+    const r = ok(2).flatMap((n) => n > 0 ? ok(n * 10) : err(new Error('neg')));
+    expect(r.value).toBe(20);
+  });
+
+  it('err flatMap is a no-op', () => {
+    const r: Result<number, Error> = err(new Error('x'));
+    const chained = r.flatMap((n) => ok(n + 1));
+    expect(chained.isErr()).toBe(true);
+  });
 });
