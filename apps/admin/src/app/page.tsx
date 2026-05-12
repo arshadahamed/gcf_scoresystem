@@ -1,1 +1,2 @@
-export default function Page() { return <div>SCF Admin</div>; }
+import { redirect } from 'next/navigation';
+export default function RootPage() { redirect('/tournaments'); }
