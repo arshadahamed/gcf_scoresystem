@@ -15,6 +15,8 @@ export class SupabaseTournamentRepository implements ITournamentRepository {
     const { error } = await this.client.from('tournaments').upsert({
       id:           tournament.id,
       name:         tournament.name,
+      season:       tournament.season,
+      format:       tournament.format,
       status:       tournament.status,
       organizer_id: tournament.organizerId,
     });

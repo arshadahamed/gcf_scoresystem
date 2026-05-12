@@ -30,6 +30,8 @@ export class Tournament extends AggregateRoot<string> {
   }
 
   get name(): string { return this._name; }
+  get season(): string { return this._season; }
+  get format(): MatchFormat { return this._format; }
   get status(): TournamentStatus { return this._status; }
   get organizerId(): string { return this._organizerId; }
 
