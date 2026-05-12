@@ -113,3 +113,17 @@ create policy ball_events_scorer_void on public.ball_events
 -- ===== STATS — public read =====
 create policy stats_public_read on public.player_match_stats for select using (true);
 create policy leaderboard_public_read on public.tournament_player_aggregates for select using (true);
+
+-- ===== PLAYING XI =====
+create policy playing_xi_public_read on public.playing_xi for select using (
+  exists (select 1 from public.matches where id = match_id and status in ('live', 'completed'))
+);
+
+create policy playing_xi_organizer_write on public.playing_xi
+  for insert with check (
+    exists (
+      select 1 from public.matches m
+      join public.tournaments t on t.id = m.tournament_id
+      where m.id = match_id and (t.organizer_id = auth.uid() or is_admin())
+    )
+  );

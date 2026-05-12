@@ -118,4 +118,45 @@ describe('Innings', () => {
     expect(inn.totalRuns).toBe(0);
     expect(inn.currentSeq).toBe(0);
   });
+
+  it('emits exactly one InningsCompletedEvent when final over ball is also 10th wicket', () => {
+    // 2-over innings. Over 1: balls 0-4 are wickets (5 wickets), ball 5 normal (over 1 done).
+    // Over 2: balls 6-9 are wickets (4 more = 9 total), ball 10 normal (5 legal in over 2).
+    // Ball 11: 6th legal ball of over 2 (completes over) AND 10th wicket (all-out) simultaneously.
+    const inn = makeInnings(2);
+
+    // Over 1: 5 wickets
+    for (let i = 0; i < 5; i++) {
+      inn.recordBall({
+        ...baseCmd(), expectedSeq: i,
+        wicket: { kind: 'bowled', dismissedPlayerId: `p${i}`, fielderId: null, bowlerId: 'b1' },
+      });
+      inn.pullDomainEvents();
+    }
+    // Ball 5: no wicket, completes over 1
+    inn.recordBall({ ...baseCmd(), expectedSeq: 5 });
+    inn.pullDomainEvents();
+
+    // Over 2: 4 more wickets (total = 9)
+    for (let i = 6; i < 10; i++) {
+      inn.recordBall({
+        ...baseCmd(), expectedSeq: i,
+        wicket: { kind: 'bowled', dismissedPlayerId: `p${i}`, fielderId: null, bowlerId: 'b1' },
+      });
+      inn.pullDomainEvents();
+    }
+    // Ball 10: no wicket (5th legal ball of over 2)
+    inn.recordBall({ ...baseCmd(), expectedSeq: 10 });
+    inn.pullDomainEvents();
+
+    // Ball 11: 6th legal ball of over 2 (over complete) AND 10th wicket (all-out)
+    inn.recordBall({
+      ...baseCmd(), expectedSeq: 11,
+      wicket: { kind: 'bowled', dismissedPlayerId: 'p_final', fielderId: null, bowlerId: 'b1' },
+    });
+    const events = inn.pullDomainEvents();
+    const completionEvents = events.filter(e => e.name === 'scoring.innings.completed');
+    expect(completionEvents).toHaveLength(1);
+    expect(inn.isComplete).toBe(true);
+  });
 });

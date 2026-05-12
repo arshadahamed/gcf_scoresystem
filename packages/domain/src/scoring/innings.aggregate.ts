@@ -137,7 +137,7 @@ export class Innings extends AggregateRoot<string> {
       }
     }
 
-    if (this._wickets >= 10) {
+    if (!this._isComplete && this._wickets >= 10) {
       this._isComplete = true;
       this.addEvent(new InningsCompletedEvent(
         this._id, this._matchId, this._score.total, this._wickets, 'all_out',
@@ -166,6 +166,17 @@ export class Innings extends AggregateRoot<string> {
       );
     }
     this._isComplete = false;
+
+    // Rebuild per-over counters from remaining balls in current over
+    const currentOverNum = this._currentOver.number;
+    this._runsThisOver = 0;
+    this._wicketsThisOver = 0;
+    for (const b of this._balls) {
+      if (b.overNumber === currentOverNum) {
+        this._runsThisOver += b.totalRuns;
+        if (b.isWicket) this._wicketsThisOver++;
+      }
+    }
 
     const event = new BallUndoneEvent(
       this._id, this._matchId, last.seq, cmd.actorId, this._score.total, this._wickets,
