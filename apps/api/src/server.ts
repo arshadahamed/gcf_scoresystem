@@ -1,6 +1,6 @@
-import * as express from 'express';
+import express from 'express';
 import helmet from 'helmet';
-import * as cors from 'cors';
+import cors from 'cors';
 import { createServer } from 'http';
 import type { Server as HttpServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
